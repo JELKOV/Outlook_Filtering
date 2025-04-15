@@ -1,0 +1,40 @@
+# 필터 조건 설정
+global:
+  days_limit: 7  # 최근 며칠치 메일만 필터링할지 지정
+
+filters:
+  # 🔹 아시아 지역에서 오픈된 선박 포지션 관련 메일
+  - name: "open_position_asia"
+    priority: 1
+    subject_keywords: ["open", "position", "mv."]  # 제목에 MV., OPEN POSITION 등
+    body_keywords: ["kendari", "jakarta", "indonesia", "malaysia", "lahad datu", "eta"]  # 동남아 지역 + 입항 예정 정보
+    has_attachment: false
+    unread_only: false
+    folder: "vessels/open_position_asia"
+
+  # 🔹 DWT 50,000급 이상의 벌크선 소개 메일 (제원 위주)
+  - name: "bulk_carrier_50000plus"
+    priority: 2
+    subject_keywords: ["mv.", "bulk", "carrier"]
+    body_keywords: ["dwt 50", "dwt 55", "dwt 56", "supramax", "handysize"]  # 중대형 벌크선 제원 키워드
+    has_attachment: false
+    unread_only: false
+    folder: "vessels/bulk_50000plus"
+
+  # 🔹 선박 제원/스펙 정보가 풍부한 메일
+  - name: "vessels_with_specs"
+    priority: 3
+    subject_keywords: ["mv."]
+    body_keywords: ["built", "flag", "imo", "loa", "grt", "nrt", "class", "specs"]
+    has_attachment: false
+    unread_only: false
+    folder: "vessels/spec_detail"
+
+  # 🔹 기타: 위 조건에 해당되지 않는 메일들 (catch-all)
+  - name: "others"
+    priority: 99
+    subject_keywords: []
+    body_keywords: []
+    has_attachment: false
+    unread_only: false
+    folder: "vessels/others"

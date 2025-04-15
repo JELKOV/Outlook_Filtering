@@ -20,7 +20,7 @@ def run_dynamic_filter(subject_keywords, body_keywords, days_limit):
     - 입력 키워드를 기준으로 필터링
     - 필터링된 메일을 temp/폴더명에 복사
     """
-    since = datetime.now() - timedelta(days=days_limit)
+    since = datetime.now().astimezone() - timedelta(days=days_limit)
     folder_name = "temp/" + "_".join(subject_keywords + body_keywords) + "_" + datetime.now().strftime("%Y-%m-%d")
 
     inbox = get_inbox()

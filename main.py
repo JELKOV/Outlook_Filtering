@@ -24,7 +24,7 @@ def run_static_filter():
     config = load_filters()
     filters = config["filters"]
     days_limit = config.get("global", {}).get("days_limit", 7)
-    since = datetime.now() - timedelta(days=days_limit)
+    since = datetime.now().astimezone() - timedelta(days=days_limit)
 
     inbox = get_inbox()
     messages = inbox.Items

@@ -22,7 +22,7 @@ def filter_email(msg, rule, since: datetime) -> bool:
     """
 
     # 메일 수신 시간이 기준 날짜 이전이면 필터 제외
-    if msg.ReceivedTime.replace(tzinfo=None) < since:
+    if msg.ReceivedTime < since:
         return False
 
     # 메일 제목과 본문 추출 (소문자 변환)

@@ -1,24 +1,42 @@
 # 콘솔 출력 및 로그 파일 기록 유틸리티
 
+import os
+import sys
 from datetime import datetime
 
+def resource_path(relative_path):
+    try:
+        # PyInstaller 배포 시: 임시 실행 폴더
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+def get_log_path():
+    """
+    항상 실제 쓰기 가능한 log.txt 경로 반환
+    배포 버전에서는 실행 파일이 있는 폴더 기준으로 생성
+    """
+    # 실행 파일이 있는 위치 (PyInstaller용)
+    if getattr(sys, 'frozen', False):
+        # exe 실행일 경우
+        base_dir = os.path.dirname(sys.executable)
+    else:
+        # 로컬 실행일 경우
+        base_dir = os.path.abspath(".")
+
+    log_dir = os.path.join(base_dir, "data")
+    os.makedirs(log_dir, exist_ok=True)
+
+    return os.path.join(log_dir, "log.txt")
+
 def log_message(text: str):
-    """
-    메시지를 콘솔에 출력하고, log.txt 파일에도 타임스탬프와 함께 기록한다.
-
-    로그 저장 위치:
-    - ./data/log.txt
-
-    로그 포맷 예시:
-    [2025-04-17 14:30:10.123456] [COPIED] MV. LOTUS 6 → vessels/bulk
-
-    파라미터:
-        text (str): 로그로 남길 메시지 문자열
-    """
-
-    # 콘솔에 출력
     print(text)
 
-    # 로그 파일에 타임스탬프와 함께 기록
-    with open("data/log.txt", "a", encoding="utf-8") as f:
-        f.write(f"[{datetime.now()}] {text}\n")
+    log_path = get_log_path()
+
+    try:
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"[{datetime.now()}] {text}\n")
+    except Exception as e:
+        print(f"[로그 기록 실패] {e}")
